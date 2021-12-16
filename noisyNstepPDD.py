@@ -51,7 +51,7 @@ args = parser.parse_args()
 # Get the environment and extract the number of actions.
 env = gym.make(args.env_name)
 np.random.seed(231)
-env.seed(231)
+env.seed(321)
 nb_actions = env.action_space.n
 print("NUMBER OF ACTIONS: " + str(nb_actions))
 
@@ -67,7 +67,7 @@ buttons = NoisyNetDense(nb_actions, activation='linear')(dense)
 model = Model(inputs=frame,outputs=buttons)
 print(model.summary())
 
-memory = PrioritizedMemory(limit=1000000, alpha=.6, start_beta=.4, end_beta=1., steps_annealed=30000000, window_length=WINDOW_LENGTH)
+memory = PrioritizedMemory(limit=1000000, alpha=.6, start_beta=.4, end_beta=1., steps_annealed=10000000, window_length=WINDOW_LENGTH)
 
 processor = AtariProcessor()
 
@@ -90,14 +90,15 @@ if args.mode == 'train':
     weights_filename = folder_path + 'final_noisynet_nstep_pdd_dqn_{}_weights.h5f'.format(args.env_name)
     checkpoint_weights_filename = folder_path + 'final_noisynet_nstep_pdd_dqn_' + args.env_name + '_weights_{step}.h5f'
     log_filename = folder_path + 'final_noisynet_nstep_pdd_dqn_' + args.env_name + '_REWARD_DATA.txt'
-    callbacks = [ModelIntervalCheckpoint(checkpoint_weights_filename, interval=5000000)]
+    callbacks = [ModelIntervalCheckpoint(checkpoint_weights_filename, interval=500000)]
     callbacks += [TrainEpisodeLogger(log_filename)]
-    dqn.fit(env, callbacks=callbacks, nb_steps=30000000, verbose=0, nb_max_episode_steps=20000)
+    dqn.fit(env, callbacks=callbacks, nb_steps=10000000, verbose=0, nb_max_episode_steps=20000)
 
 
 elif args.mode == 'test':
-    weights_filename = folder_path + 'final_noisynet_nstep_pdd_dqn_MsPacmanDeterministic-v4_weights_40000000.h5f'
+    weights_filename = folder_path + 'final_noisynet_nstep_pdd_dqn_MsPacmanDeterministic-v4_weights_7000000.h5f'
     if args.weights:
         weights_filename = args.weights
     dqn.load_weights(weights_filename)
-    dqn.test(env, nb_episodes=20, visualize=True, nb_max_start_steps=80)
+    dqn.test(env, nb_episodes=50, visualize=True, nb_max_start_steps=80)
+
