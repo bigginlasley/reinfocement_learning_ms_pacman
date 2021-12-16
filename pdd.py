@@ -92,8 +92,8 @@ if args.mode == 'train':
 
 
 elif args.mode == 'test':
-    weights_filename = folder_path + 'pdd_dqn_MsPacmanDeterministic-v4_weights_3000000.h5f'
+    weights_filename = folder_path + 'pdd_dqn_MsPacmanDeterministic-v4_weights_7000000.h5f'
     if args.weights:
         weights_filename = args.weights
     dqn.load_weights(weights_filename)
-    dqn.test(env, nb_episodes=10, visualize=True, nb_max_start_steps=80)
+    dqn.test(env, nb_episodes=50, visualize=True, nb_max_start_steps=80)
